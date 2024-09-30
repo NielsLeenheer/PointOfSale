@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>@point-of-sale/ libraries</title>
+        <link rel="stylesheet" href="https://use.typekit.net/zog7iwn.css">
+
+        <style>
+
+            html {
+                font-family: "europa", sans-serif;
+            }
+            
+            body {
+                display: grid;
+                grid-template-columns: 1em minmax(20em, 48em) 1em;
+                justify-content: center;
+            }
+
+            a, a:visited {
+                color: #1976d2;
+                text-decoration: none;
+            }
+
+            header {
+                grid-column: 2;
+                margin-bottom: 4em;
+            }
+
+            header h1 {
+                font-size: 4em;
+                font-size: clamp(2.4em, 10vw, 4em);
+                margin: 2em 0 0;
+            }
+
+            main {
+                grid-column: 2;
+            }
+
+            main h2 {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+            }
+
+            main h2 svg {
+                margin-right: 0.5em;
+            }
+
+            main h2 .button {
+                align-self: stretch;
+                margin-left: auto;
+                color: #1976d2;
+                background: #bbdefb;
+                font-size: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 1em;
+                border-radius: 0.5em;
+                min-height: 48px;
+            }
+
+            main h2 .button svg {
+                height: 2em;
+                margin-right: 0.5em;
+            }
+
+            main section {
+                margin-bottom: 4em;
+            }
+
+
+            main section dl {
+                display: grid;
+                grid-template-columns: 1.5em minmax(18em,26em) 1fr;
+            }
+
+            main section dt {
+                grid-column: 2;
+                color: #888;
+                text-wrap: nowrap;
+                min-height: 2em;
+            }
+
+            main section dt a {
+                font-weight: bold;
+            }
+
+            main section dd {
+                grid-column: 3;
+                display: flex;
+            }
+
+            .support {
+                display: flex;
+                height: 1em;
+                background: #f5f5f5;
+                border-radius: 0.5em;
+                padding: 0.1em 0.2em 0.3em;
+                align-items: center;
+                font-weight: normal;
+                line-height: 100%;
+                text-wrap: nowrap;
+                color: #bbb;
+            }
+
+            .icon {
+                background-repeat: no-repeat;
+                background-size: contain;
+                margin-bottom: -0.2em;
+                height: 100%;
+                aspect-ratio: 1;
+            }
+            .chrome {
+                background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCI+CjxwYXRoIGZpbGw9IiM0Y2FmNTAiIGQ9Ik00NCwyNGMwLDExLjA0NC04Ljk1NiwyMC0yMCwyMFM0LDM1LjA0NCw0LDI0UzEyLjk1Niw0LDI0LDRTNDQsMTIuOTU2LDQ0LDI0eiI+PC9wYXRoPjxwYXRoIGZpbGw9IiNmZmMxMDciIGQ9Ik0yNCw0djIwbDgsNGwtOC44NDMsMTZjMC4zMTcsMCwwLjUyNiwwLDAuODQzLDBjMTEuMDUzLDAsMjAtOC45NDcsMjAtMjBTMzUuMDUzLDQsMjQsNHoiPjwvcGF0aD48cGF0aCBmaWxsPSIjNGNhZjUwIiBkPSJNNDQsMjRjMCwxMS4wNDQtOC45NTYsMjAtMjAsMjBTNCwzNS4wNDQsNCwyNFMxMi45NTYsNCwyNCw0UzQ0LDEyLjk1Niw0NCwyNHoiPjwvcGF0aD48cGF0aCBmaWxsPSIjZmZjMTA3IiBkPSJNMjQsNHYyMGw4LDRsLTguODQzLDE2YzAuMzE3LDAsMC41MjYsMCwwLjg0MywwYzExLjA1MywwLDIwLTguOTQ3LDIwLTIwUzM1LjA1Myw0LDI0LDR6Ij48L3BhdGg+PHBhdGggZmlsbD0iI2Y0NDMzNiIgZD0iTTQxLjg0LDE1SDI0djEzbC0zLTFMNy4xNiwxMy4yNkg3LjE0QzEwLjY4LDcuNjksMTYuOTEsNCwyNCw0QzMxLjgsNCwzOC41NSw4LjQ4LDQxLjg0LDE1eiI+PC9wYXRoPjxwYXRoIGZpbGw9IiNkZDJjMDAiIGQ9Ik03LjE1OCwxMy4yNjRsOC44NDMsMTQuODYyTDIxLDI3TDcuMTU4LDEzLjI2NHoiPjwvcGF0aD48cGF0aCBmaWxsPSIjNTU4YjJmIiBkPSJNMjMuMTU3LDQ0bDguOTM0LTE2LjA1OUwyOCwyNUwyMy4xNTcsNDR6Ij48L3BhdGg+PHBhdGggZmlsbD0iI2Y5YTgyNSIgZD0iTTQxLjg2NSwxNUgyNGwtMS41NzksNC41OEw0MS44NjUsMTV6Ij48L3BhdGg+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTMzLDI0YzAsNC45NjktNC4wMzEsOS05LDlzLTktNC4wMzEtOS05czQuMDMxLTksOS05UzMzLDE5LjAzMSwzMywyNHoiPjwvcGF0aD48cGF0aCBmaWxsPSIjMjE5NmYzIiBkPSJNMzEsMjRjMCwzLjg2Ny0zLjEzMyw3LTcsN3MtNy0zLjEzMy03LTdzMy4xMzMtNyw3LTdTMzEsMjAuMTMzLDMxLDI0eiI+PC9wYXRoPgo8L3N2Zz4=)
+            }
+            .edge {
+                background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCI+CjxwYXRoIGZpbGw9IiMxZTg4ZTUiIGQ9Ik00MC42OSwzNS40MmMtOS4xNSwxMS44OC0yMS40MSw4LjgtMjYuMjMsNi4xIGMtNy4zNS00LjExLTEyLjUtMTMuNjgtOS40NC0yMy4yNWMwLjktMi44MiwyLjI3LTUuMjMsMy45OC03LjIzYzEuNjcsMC4xMywzLjY1LDAuMTMsNi0wLjA0YzE0LTEsMTgsMTEsMTcsMTQgYy0wLjUxLDEuNTMtMi4zMiwyLjAyLTMuOTcsMi4xM2MwLjE2LTAuMjIsMC4zNi0wLjU0LDAuNjQtMS4wMmMwLjg3LTEuNTQsMC45OC00LjQ5LTEuNzMtNi4yN2MtMi42MS0xLjctNS40My0wLjY1LTYuODgsMS4yOCBjLTEuNDUsMS45Mi0wLjg4LDQuODEtMC4zNyw2LjA5YzIuMiw1LjUyLDYuMjYsNi45NSw5LjAyLDcuNzhjMi43NiwwLjgzLDYuODYsMC43MSw5LjA1LTAuMTljMi4xOC0wLjkxLDIuOC0xLjQzLDMuMjItMC45NyBDNDEuNDEsMzQuMjksNDEuMTEsMzQuODIsNDAuNjksMzUuNDJ6Ij48L3BhdGg+PHBhdGggZmlsbD0iIzBkNDdhMSIgZD0iTTQwLjczMiwzNS40MmMtMy40OCw0LjUyLTcuNDEsNi44Ny0xMS4yMSw3LjkxIGMtMC4wMywwLjAxLTAuMDYsMC4wMS0wLjA4LDAuMDJjLTIuMiwwLjQyLTMuOTUsMC4wOC01Ljg1LTAuMjljLTMuMDktMC42LTcuMzUtNC4wMS04LjM4LTEwLjE4Yy0wLjg4LTUuMzEsMS42My05LjgxLDUuNTktMTIuNTQgYy0wLjI2LDAuMjQtMC40OSwwLjUtMC43LDAuNzhjLTEuNDUsMS45Mi0wLjg4LDQuODEtMC4zNyw2LjA5YzIuMiw1LjUyLDYuMjYsNi45NSw5LjAyLDcuNzhjMi43NiwwLjgzLDYuODYsMC43MSw5LjA1LTAuMTkgYzIuMTgtMC45MSwyLjgtMS40MywzLjIyLTAuOTdDNDEuNDUyLDM0LjI5LDQxLjE1MiwzNC44Miw0MC43MzIsMzUuNDJ6Ij48L3BhdGg+PHBhdGggZmlsbD0iIzAwZTVmZiIgZD0iTTI2Ljk0LDQuMjVjMC4wMiwwLjI2LDAuMDMsMC41NCwwLjAzLDAuODFjMCwzLjc4LTEuNzUsNy4xNC00LjQ4LDkuMzIgYy0xLjAyLTAuNTItMi4yMS0wLjk0LTMuNjUtMS4yMmMtNC4wNy0wLjc4LTEwLjYzLDEuMS0xMy4zLDUuNzdjLTAuODgsMS41My0xLjI1LDMuMS0xLjQxLDQuNTVjMC4wNC0xLjcxLDAuMzMtMy40NiwwLjg5LTUuMjEgQzguMzEsOC4wMSwxNy44NiwzLjA1LDI2Ljk0LDQuMjV6Ij48L3BhdGg+PHBhdGggZmlsbD0iIzAwZTY3NiIgZD0iTTQxLjQsMjcuODljLTIuNzYsMi43OC02LjI3LDIuODYtOC42NywyLjczIGMtMi40MS0wLjEyLTMuNTktMC44Mi00LjY5LTEuNWMtMS4xMS0wLjY5LTAuNDgtMS4zNy0wLjM3LTEuNTJjMC4xMS0wLjE1LDAuMzgtMC40MSwxLTEuNDljMC4yOS0wLjUxLDAuNS0xLjE4LDAuNTQtMS45MSBjNC42Mi0zLjQzLDcuOTYtOC40OSw5LjE2LTE0LjM0YzIuOTIsMi45NSw0LjMsNi4yMSw0Ljc5LDcuNjFDNDQuMDQsMTkuOTksNDQuNzEsMjQuNTYsNDEuNCwyNy44OXoiPjwvcGF0aD48cGF0aCBmaWxsPSIjMWRlOWI2IiBkPSJNMzguMzcsOS44NXYwLjAxYy0xLjIsNS44NS00LjU0LDEwLjkxLTkuMTYsMTQuMzRjMC4wMy0wLjQyLDAtMC44Ny0wLjEtMS4zMiBjMC0wLjAyLTAuMDEtMC4wNC0wLjAxLTAuMDVjLTAuMjUtMS40Ny0wLjk5LTMuMzMtMi4yMi00Ljc3Yy0xLjIyLTEuNDQtMi41Mi0yLjczLTQuMzktMy42OGMyLjczLTIuMTgsNC40OC01LjU0LDQuNDgtOS4zMiBjMC0wLjI3LTAuMDEtMC41NS0wLjAzLTAuODFjMC40LDAuMDUsMC43OSwwLjExLDEuMTksMC4xOUMzMi43NCw1LjMzLDM2LjA0LDcuNDksMzguMzcsOS44NXoiPjwvcGF0aD4KPC9zdmc+)
+            }
+            .safari {
+                background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCI+CjxwYXRoIGZpbGw9IiNjZmQ4ZGMiIGQ9Ik00NCwyNGMwLDExLjA0NC04Ljk1NiwyMC0yMCwyMFM0LDM1LjA0NCw0LDI0UzEyLjk1Niw0LDI0LDRTNDQsMTIuOTU2LDQ0LDI0eiI+PC9wYXRoPjxwYXRoIGZpbGw9IiM0NDhhZmYiIGQ9Ik00MSwyNGMwLDkuMzkxLTcuNjA5LDE3LTE3LDE3UzcsMzMuMzkxLDcsMjRTMTQuNjA5LDcsMjQsN1M0MSwxNC42MDksNDEsMjR6Ij48L3BhdGg+PHBhdGggZmlsbD0iI2ZmM2QwMCIgZD0iTTIxLjg5OCwyMS44OThsNC4yMDMsNC4yMDNsOS4xOTktMTMuNDAyTDIxLjg5OCwyMS44OTh6Ij48L3BhdGg+PHBhdGggZmlsbD0iI2JmMzYwYyIgZD0iTTI0LDI0bDExLjMwMS0xMS4zMDFsLTkuMTk5LDEzLjQwMkwyNCwyNHoiPjwvcGF0aD48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMjEuODk4LDIxLjg5OGwtOS4xOTksMTMuNDAybDEzLjQwMi05LjE5OUwyMS44OTgsMjEuODk4eiI+PC9wYXRoPjxwYXRoIGZpbGw9IiNiZGJkYmQiIGQ9Ik0yNCwyNEwxMi42OTksMzUuMzAxbDEzLjQwMi05LjE5OUwyNCwyNHoiPjwvcGF0aD48cGF0aCBmaWxsPSIjYmJkZWZiIiBkPSJNMTcuMTAyLDEwLjY5OWMwLjU5OC0wLjMwMSwxLjE5OS0wLjU5OCwxLjc5Ny0wLjgwMWwxLjIwMywyLjcwM2wtMS44MDEsMC43OTdMMTcuMTAyLDEwLjY5OXogTTM2LDI1aDIuODk4YzAtMC4zMDEsMC4xMDItMC42OTksMC4xMDItMXMwLTAuNjk5LTAuMTAyLTFIMzZWMjV6IE0xMi42OTksMTQuMTAybDIuMTAyLDIuMDk4bDEuMzk4LTEuMzk4bC0yLjA5OC0yLjEwMkMxMy42MDIsMTMuMTk5LDEzLjE5OSwxMy42MDIsMTIuNjk5LDE0LjEwMnogTTI1LDkuMTAyQzI0LjY5OSw5LDI0LjMwMSw5LDI0LDlzLTAuNjk5LDAtMSwwLjEwMlYxMmgyVjkuMTAyeiBNMzAuMzk4LDEwLjVjLTAuNTk4LTAuMzAxLTEuMTk5LTAuNS0xLjg5OC0wLjY5OWwtMS4xMDIsMi44MDFsMS45MDIsMC42OTlMMzAuMzk4LDEwLjV6IE0xMi41LDIwLjVsMC42OTktMS44OThMMTAuNSwxNy41Yy0wLjMwMSwwLjYwMi0wLjUsMS4xOTktMC42OTksMS44OThMMTIuNSwyMC41eiBNMTIsMjNIOS4xMDJDOSwyMy4zMDEsOSwyMy42OTksOSwyNHMwLDAuNjk5LDAuMTAyLDFIMTJWMjN6IE0zNS41LDI3LjVsLTAuNjk5LDEuODk4TDM3LjUsMzAuNWMwLjMwMS0wLjYwMiwwLjUtMS4xOTksMC42OTktMS44OThMMzUuNSwyNy41eiBNMzguMTAyLDE4Ljg5OGMtMC4yMDMtMC41OTgtMC41LTEuMTk5LTAuODAxLTEuNzk3bC0yLjY5OSwxLjE5OWwwLjc5NywxLjgwMUwzOC4xMDIsMTguODk4eiBNMzUuMzAxLDMzLjg5OGwtMi4xMDItMi4wOThsLTEuMzk4LDEuMzk4bDIuMDk4LDIuMTAyQzM0LjM5OCwzNC44MDEsMzQuODAxLDM0LjM5OCwzNS4zMDEsMzMuODk4eiBNMTMuMzk4LDI5LjY5OWwtMC43OTctMS44MDFsLTIuNzAzLDEuMjAzYzAuMjAzLDAuNTk4LDAuNSwxLjE5OSwwLjgwMSwxLjc5N0wxMy4zOTgsMjkuNjk5eiBNMjkuNjk5LDM0LjYwMmwtMS44MDEsMC43OTdsMS4yMDMsMi43MDNjMC41OTgtMC4yMDMsMS4xOTktMC41LDEuNzk3LTAuODAxTDI5LjY5OSwzNC42MDJ6IE0yMC41LDM1LjVsLTEuODk4LTAuNjk5TDE3LjUsMzcuNWMwLjYwMiwwLjMwMSwxLjE5OSwwLjUsMS44OTgsMC42OTlMMjAuNSwzNS41eiBNMjUsMzguODk4VjM2aC0ydjIuODk4YzAuMzAxLDAsMC42OTksMC4xMDIsMSwwLjEwMlMyNC42OTksMzksMjUsMzguODk4eiI+PC9wYXRoPgo8L3N2Zz4=);
+            }
+            .firefox {
+                background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PGRlZnM+PHJhZGlhbEdyYWRpZW50IGlkPSJiIiBjeD0iLTc5MzAuODUiIGN5PSI4NTU2LjY3IiByPSI0MS4xNiIgZng9Ii03OTMwLjg1IiBmeT0iODU1Ni42NyIgZ3JhZGllbnRUcmFuc2Zvcm09Im1hdHJpeCguOTggMCAwIC0uOTggNzgyNi4xMiA4NDExLjAzKSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iLjEzIiBzdG9wLWNvbG9yPSIjZmZiZDRmIi8+PHN0b3Agb2Zmc2V0PSIuMTkiIHN0b3AtY29sb3I9IiNmZmFjMzEiLz48c3RvcCBvZmZzZXQ9Ii4yNSIgc3RvcC1jb2xvcj0iI2ZmOWQxNyIvPjxzdG9wIG9mZnNldD0iLjI4IiBzdG9wLWNvbG9yPSIjZmY5ODBlIi8+PHN0b3Agb2Zmc2V0PSIuNCIgc3RvcC1jb2xvcj0iI2ZmNTYzYiIvPjxzdG9wIG9mZnNldD0iLjQ3IiBzdG9wLWNvbG9yPSIjZmYzNzUwIi8+PHN0b3Agb2Zmc2V0PSIuNzEiIHN0b3AtY29sb3I9IiNmNTE1NmMiLz48c3RvcCBvZmZzZXQ9Ii43OCIgc3RvcC1jb2xvcj0iI2ViMDg3OCIvPjxzdG9wIG9mZnNldD0iLjg2IiBzdG9wLWNvbG9yPSIjZTUwMDgwIi8+PC9yYWRpYWxHcmFkaWVudD48cmFkaWFsR3JhZGllbnQgaWQ9ImMiIGN4PSItNzk0Ni4xNCIgY3k9Ijg1MzkuODYiIHI9IjQxLjE2IiBmeD0iLTc5NDYuMTQiIGZ5PSI4NTM5Ljg2IiBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KC45OCAwIDAgLS45OCA3ODI2LjEyIDg0MTEuMDMpIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIuMyIgc3RvcC1jb2xvcj0iIzk2MGUxOCIvPjxzdG9wIG9mZnNldD0iLjM1IiBzdG9wLWNvbG9yPSIjYjExOTI3IiBzdG9wLW9wYWNpdHk9Ii43NCIvPjxzdG9wIG9mZnNldD0iLjQzIiBzdG9wLWNvbG9yPSIjZGIyOTNkIiBzdG9wLW9wYWNpdHk9Ii4zNCIvPjxzdG9wIG9mZnNldD0iLjUiIHN0b3AtY29sb3I9IiNmNTMzNGIiIHN0b3Atb3BhY2l0eT0iLjA5Ii8+PHN0b3Agb2Zmc2V0PSIuNTMiIHN0b3AtY29sb3I9IiNmZjM3NTAiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PHJhZGlhbEdyYWRpZW50IGlkPSJkIiBjeD0iLTc5NDEuMDQiIGN5PSI4NTY1Ljg0IiByPSIyOS44MiIgZng9Ii03OTQxLjA0IiBmeT0iODU2NS44NCIgZ3JhZGllbnRUcmFuc2Zvcm09Im1hdHJpeCguOTggMCAwIC0uOTggNzgyNi4xMiA4NDExLjAzKSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iLjEzIiBzdG9wLWNvbG9yPSIjZmZmNDRmIi8+PHN0b3Agb2Zmc2V0PSIuMjUiIHN0b3AtY29sb3I9IiNmZmRjM2UiLz48c3RvcCBvZmZzZXQ9Ii41MSIgc3RvcC1jb2xvcj0iI2ZmOWQxMiIvPjxzdG9wIG9mZnNldD0iLjUzIiBzdG9wLWNvbG9yPSIjZmY5ODBlIi8+PC9yYWRpYWxHcmFkaWVudD48cmFkaWFsR3JhZGllbnQgaWQ9ImUiIGN4PSItNzk1MC43MiIgY3k9Ijg1MjkuMTYiIHI9IjE5LjYiIGZ4PSItNzk1MC43MiIgZnk9Ijg1MjkuMTYiIGdyYWRpZW50VHJhbnNmb3JtPSJtYXRyaXgoLjk4IDAgMCAtLjk4IDc4MjYuMTIgODQxMS4wMykiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBvZmZzZXQ9Ii4zNSIgc3RvcC1jb2xvcj0iIzNhOGVlNiIvPjxzdG9wIG9mZnNldD0iLjQ3IiBzdG9wLWNvbG9yPSIjNWM3OWYwIi8+PHN0b3Agb2Zmc2V0PSIuNjciIHN0b3AtY29sb3I9IiM5MDU5ZmYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNjMTM5ZTYiLz48L3JhZGlhbEdyYWRpZW50PjxyYWRpYWxHcmFkaWVudCBpZD0iZiIgY3g9Ii04MDQ2LjA5IiBjeT0iODU2MC4xNiIgcj0iMTAuMzkiIGZ4PSItODA0Ni4wOSIgZnk9Ijg1NjAuMTYiIGdyYWRpZW50VHJhbnNmb3JtPSJtYXRyaXgoLjk1MyAtLjIzIC0uMjcgLTEuMTE4IDEwMDE2LjY0IDc3MzAuNzUpIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIuMjEiIHN0b3AtY29sb3I9IiM5MDU5ZmYiIHN0b3Atb3BhY2l0eT0iMCIvPjxzdG9wIG9mZnNldD0iLjI4IiBzdG9wLWNvbG9yPSIjOGM0ZmYzIiBzdG9wLW9wYWNpdHk9Ii4wNiIvPjxzdG9wIG9mZnNldD0iLjc1IiBzdG9wLWNvbG9yPSIjNzcxNmE4IiBzdG9wLW9wYWNpdHk9Ii40NSIvPjxzdG9wIG9mZnNldD0iLjk3IiBzdG9wLWNvbG9yPSIjNmUwMDhiIiBzdG9wLW9wYWNpdHk9Ii42Ii8+PC9yYWRpYWxHcmFkaWVudD48cmFkaWFsR3JhZGllbnQgaWQ9ImciIGN4PSItNzk0Ni42NCIgY3k9Ijg1NTguMiIgcj0iMTQuMSIgZng9Ii03OTQ2LjY0IiBmeT0iODU1OC4yIiBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KC45OCAwIDAgLS45OCA3ODI2LjEyIDg0MTEuMDMpIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmZlMjI2Ii8+PHN0b3Agb2Zmc2V0PSIuMTIiIHN0b3AtY29sb3I9IiNmZmRiMjciLz48c3RvcCBvZmZzZXQ9Ii4yOSIgc3RvcC1jb2xvcj0iI2ZmYzgyYSIvPjxzdG9wIG9mZnNldD0iLjUiIHN0b3AtY29sb3I9IiNmZmE5MzAiLz48c3RvcCBvZmZzZXQ9Ii43MyIgc3RvcC1jb2xvcj0iI2ZmN2UzNyIvPjxzdG9wIG9mZnNldD0iLjc5IiBzdG9wLWNvbG9yPSIjZmY3MTM5Ii8+PC9yYWRpYWxHcmFkaWVudD48cmFkaWFsR3JhZGllbnQgaWQ9ImgiIGN4PSItNzkzNS40NCIgY3k9Ijg1NjcuMzciIHI9IjYwLjE3IiBmeD0iLTc5MzUuNDQiIGZ5PSI4NTY3LjM3IiBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KC45OCAwIDAgLS45OCA3ODI2LjEyIDg0MTEuMDMpIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIuMTEiIHN0b3AtY29sb3I9IiNmZmY0NGYiLz48c3RvcCBvZmZzZXQ9Ii40NiIgc3RvcC1jb2xvcj0iI2ZmOTgwZSIvPjxzdG9wIG9mZnNldD0iLjYyIiBzdG9wLWNvbG9yPSIjZmY1NjM0Ii8+PHN0b3Agb2Zmc2V0PSIuNzIiIHN0b3AtY29sb3I9IiNmZjM2NDciLz48c3RvcCBvZmZzZXQ9Ii45IiBzdG9wLWNvbG9yPSIjZTMxNTg3Ii8+PC9yYWRpYWxHcmFkaWVudD48cmFkaWFsR3JhZGllbnQgaWQ9ImkiIGN4PSItNzc2NS4wNCIgY3k9IjkyOTMuNjMiIHI9IjQ0LjA3IiBmeD0iLTc3NjUuMDQiIGZ5PSI5MjkzLjYzIiBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KC4xMDMgLjk3NSAuNjM2IC0uMDY3IC01MTMwLjAzIDgyMTguMDEpIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmZmNDRmIi8+PHN0b3Agb2Zmc2V0PSIuMDYiIHN0b3AtY29sb3I9IiNmZmU4NDciLz48c3RvcCBvZmZzZXQ9Ii4xNyIgc3RvcC1jb2xvcj0iI2ZmYzgzMCIvPjxzdG9wIG9mZnNldD0iLjMiIHN0b3AtY29sb3I9IiNmZjk4MGUiLz48c3RvcCBvZmZzZXQ9Ii4zNiIgc3RvcC1jb2xvcj0iI2ZmOGIxNiIvPjxzdG9wIG9mZnNldD0iLjQ2IiBzdG9wLWNvbG9yPSIjZmY2NzJhIi8+PHN0b3Agb2Zmc2V0PSIuNTciIHN0b3AtY29sb3I9IiNmZjM2NDciLz48c3RvcCBvZmZzZXQ9Ii43NCIgc3RvcC1jb2xvcj0iI2UzMTU4NyIvPjwvcmFkaWFsR3JhZGllbnQ+PHJhZGlhbEdyYWRpZW50IGlkPSJqIiBjeD0iLTc5NDYuNjQiIGN5PSI4NTUzLjExIiByPSIzNy41NiIgZng9Ii03OTQ2LjY0IiBmeT0iODU1My4xMSIgZ3JhZGllbnRUcmFuc2Zvcm09Im1hdHJpeCguOTggMCAwIC0uOTggNzgyNi4xMiA4NDExLjAzKSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iLjE0IiBzdG9wLWNvbG9yPSIjZmZmNDRmIi8+PHN0b3Agb2Zmc2V0PSIuNDgiIHN0b3AtY29sb3I9IiNmZjk4MGUiLz48c3RvcCBvZmZzZXQ9Ii41OSIgc3RvcC1jb2xvcj0iI2ZmNTYzNCIvPjxzdG9wIG9mZnNldD0iLjY2IiBzdG9wLWNvbG9yPSIjZmYzNjQ3Ii8+PHN0b3Agb2Zmc2V0PSIuOSIgc3RvcC1jb2xvcj0iI2UzMTU4NyIvPjwvcmFkaWFsR3JhZGllbnQ+PHJhZGlhbEdyYWRpZW50IGlkPSJrIiBjeD0iLTc5MzYuOTciIGN5PSI4NTUxLjA3IiByPSI0MS4xMSIgZng9Ii03OTM2Ljk3IiBmeT0iODU1MS4wNyIgZ3JhZGllbnRUcmFuc2Zvcm09Im1hdHJpeCguOTggMCAwIC0uOTggNzgyNi4xMiA4NDExLjAzKSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iLjA5IiBzdG9wLWNvbG9yPSIjZmZmNDRmIi8+PHN0b3Agb2Zmc2V0PSIuMjMiIHN0b3AtY29sb3I9IiNmZmUxNDEiLz48c3RvcCBvZmZzZXQ9Ii41MSIgc3RvcC1jb2xvcj0iI2ZmYWYxZSIvPjxzdG9wIG9mZnNldD0iLjYzIiBzdG9wLWNvbG9yPSIjZmY5ODBlIi8+PC9yYWRpYWxHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9ImEiIHgxPSI0NS43MSIgeDI9IjEyLjkzIiB5MT0iMzAuOTUiIHkyPSItLjY4IiBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KC45OCAwIDAgLS45OCAtNS41IDQwLjU5KSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iLjA1IiBzdG9wLWNvbG9yPSIjZmZmNDRmIi8+PHN0b3Agb2Zmc2V0PSIuMTEiIHN0b3AtY29sb3I9IiNmZmU4NDciLz48c3RvcCBvZmZzZXQ9Ii4yMyIgc3RvcC1jb2xvcj0iI2ZmYzgzMCIvPjxzdG9wIG9mZnNldD0iLjM3IiBzdG9wLWNvbG9yPSIjZmY5ODBlIi8+PHN0b3Agb2Zmc2V0PSIuNCIgc3RvcC1jb2xvcj0iI2ZmOGIxNiIvPjxzdG9wIG9mZnNldD0iLjQ2IiBzdG9wLWNvbG9yPSIjZmY2NzJhIi8+PHN0b3Agb2Zmc2V0PSIuNTMiIHN0b3AtY29sb3I9IiNmZjM2NDciLz48c3RvcCBvZmZzZXQ9Ii43IiBzdG9wLWNvbG9yPSIjZTMxNTg3Ii8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9ImwiIHgxPSI0NS4zMiIgeDI9IjE3LjQzIiB5MT0iMzEuMTEiIHkyPSIzLjIyIiBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KC45OCAwIDAgLS45OCAtNS41IDQwLjU5KSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iLjE3IiBzdG9wLWNvbG9yPSIjZmZmNDRmIiBzdG9wLW9wYWNpdHk9Ii44Ii8+PHN0b3Agb2Zmc2V0PSIuMjciIHN0b3AtY29sb3I9IiNmZmY0NGYiIHN0b3Atb3BhY2l0eT0iLjYzIi8+PHN0b3Agb2Zmc2V0PSIuNDkiIHN0b3AtY29sb3I9IiNmZmY0NGYiIHN0b3Atb3BhY2l0eT0iLjIyIi8+PHN0b3Agb2Zmc2V0PSIuNiIgc3RvcC1jb2xvcj0iI2ZmZjQ0ZiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHBhdGggZD0iTTQxLjk2IDE3LjQzYy0uODQtMi4wMy0yLjU1LTQuMjItMy44OS00LjkxLjk1IDEuODUgMS42MiAzLjgzIDEuOTYgNS44OHYuMDNjLTIuMTktNS40Ni01LjktNy42Ny04Ljk0LTEyLjQ3LS4xNS0uMjQtLjMxLS40OS0uNDYtLjc0LS4wOS0uMTUtLjE1LS4yOC0uMjEtLjQtLjEzLS4yNC0uMjItLjUtLjI5LS43NyAwLS4wMy0uMDItLjA1LS4wNC0uMDVoLS4wNWMtNC44NyAyLjg0LTYuNTIgOC4xMi02LjY3IDEwLjc2LTEuOTUuMTMtMy44MS44NS01LjM0IDIuMDYtLjE2LS4xNC0uMzMtLjI2LS41LS4zOC0uNDQtMS41NS0uNDYtMy4xOC0uMDUtNC43NC0xLjc5Ljg3LTMuMzggMi4wOS00LjY3IDMuNjEtLjc3LS45Ny0uNzEtNC4xOS0uNjctNC44Ni0uMjMuMDktLjQ0LjIxLS42NS4zNC0uNjguNDgtMS4zMSAxLjAzLTEuOSAxLjYyLS42Ni42Ny0xLjI3IDEuNC0xLjgxIDIuMTctMS4yNSAxLjc3LTIuMTMgMy43Ni0yLjYgNS44N2wtLjAzLjEzYy0uMDQuMTctLjE3IDEuMDMtLjE5IDEuMjF2LjA0Yy0uMTcuODgtLjI3IDEuNzgtLjMxIDIuNjd2LjFjLjAyIDEwLjcxIDguNzIgMTkuMzcgMTkuNDIgMTkuMzYgOS40Mi0uMDIgMTcuNDYtNi44IDE5LjA3LTE2LjA4bC4wOS0uNzVjLjQtMy4zLS4wMy02LjY1LTEuMjYtOS43NFpNMTkuNjIgMzIuNjFjLjA5LjA0LjE4LjA5LjI3LjEzaC4wMWMtLjA5LS4wNC0uMTktLjA4LS4yOC0uMTNabTIwLjQyLTE0LjE3di0uMDIuMDJaIiBzdHlsZT0iZmlsbDp1cmwoI2EpIi8+PHBhdGggZD0iTTQxLjk2IDE3LjQzYy0uODQtMi4wMy0yLjU1LTQuMjItMy44OS00LjkxLjk1IDEuODUgMS42MiAzLjgzIDEuOTYgNS44OHYuMDRjMS41IDQuMjggMS4yOCA4Ljk3LS42IDEzLjA5LTIuMjIgNC43Ny03LjYgOS42Ni0xNi4wMiA5LjQyLTkuMDktLjI2LTE3LjExLTcuMDEtMTguNi0xNS44NS0uMjctMS4zOSAwLTIuMS4xNC0zLjIzLS4xOS44OC0uMjkgMS43OC0uMzEgMi42OHYuMWMuMDIgMTAuNzEgOC43MiAxOS4zNyAxOS40MiAxOS4zNiA5LjQyLS4wMiAxNy40Ni02LjggMTkuMDctMTYuMDhsLjA5LS43NWMuNC0zLjMtLjAzLTYuNjUtMS4yNi05Ljc0WiIgc3R5bGU9ImZpbGw6dXJsKCNiKSIvPjxwYXRoIGQ9Ik00MS45NiAxNy40M2MtLjg0LTIuMDMtMi41NS00LjIyLTMuODktNC45MS45NSAxLjg1IDEuNjIgMy44MyAxLjk2IDUuODh2LjA0YzEuNSA0LjI4IDEuMjggOC45Ny0uNiAxMy4wOS0yLjIyIDQuNzctNy42IDkuNjYtMTYuMDIgOS40Mi05LjA5LS4yNi0xNy4xMS03LjAxLTE4LjYtMTUuODUtLjI3LTEuMzkgMC0yLjEuMTQtMy4yMy0uMTkuODgtLjI5IDEuNzgtLjMxIDIuNjh2LjFjLjAyIDEwLjcxIDguNzIgMTkuMzcgMTkuNDIgMTkuMzYgOS40Mi0uMDIgMTcuNDYtNi44IDE5LjA3LTE2LjA4bC4wOS0uNzVjLjQtMy4zLS4wMy02LjY1LTEuMjYtOS43NFoiIHN0eWxlPSJmaWxsOnVybCgjYykiLz48cGF0aCBkPSJtMzIuNTQgMTkuNzEuMTIuMDljLS40OS0uODYtMS4wOS0xLjY1LTEuOC0yLjM1LTYuMDMtNi4wMy0xLjU4LTEzLjA3LS44My0xMy40My00Ljg3IDIuODQtNi41MiA4LjEyLTYuNjcgMTAuNzYuMjMtLjAyLjQ1LS4wMy42OC0uMDMgMy41MiAwIDYuNzYgMS45IDguNDkgNC45NloiIHN0eWxlPSJmaWxsOnVybCgjZCkiLz48cGF0aCBkPSJNMjQuMDUgMjAuOTFjLS4wMy40OC0xLjc0IDIuMTUtMi4zMyAyLjE1LTUuNTEgMC02LjQxIDMuMzQtNi40MSAzLjM0LjI0IDIuODEgMi4yIDUuMTIgNC41NyA2LjM0LjExLjA2LjIyLjExLjMzLjE2LjE5LjA4LjM4LjE2LjU3LjIzLjgxLjI5IDEuNjYuNDUgMi41Mi40OSA5LjY3LjQ1IDExLjU0LTExLjU2IDQuNTYtMTUuMDQgMS42NS0uMjEgMy4zMS4xOSA0LjY3IDEuMTQtMS43My0zLjA2LTQuOTgtNC45NS04LjQ5LTQuOTYtLjIzIDAtLjQ2LjAyLS42OC4wMy0xLjk1LjEzLTMuODEuODUtNS4zNCAyLjA2LjMuMjUuNjMuNTggMS4zMyAxLjI4IDEuMzIgMS4zIDQuNjkgMi42NCA0LjcgMi44WiIgc3R5bGU9ImZpbGw6dXJsKCNlKSIvPjxwYXRoIGQ9Ik0yNC4wNSAyMC45MWMtLjAzLjQ4LTEuNzQgMi4xNS0yLjMzIDIuMTUtNS41MSAwLTYuNDEgMy4zNC02LjQxIDMuMzQuMjQgMi44MSAyLjIgNS4xMiA0LjU3IDYuMzQuMTEuMDYuMjIuMTEuMzMuMTYuMTkuMDguMzguMTYuNTcuMjMuODEuMjkgMS42Ni40NSAyLjUyLjQ5IDkuNjcuNDUgMTEuNTQtMTEuNTYgNC41Ni0xNS4wNCAxLjY1LS4yMSAzLjMxLjE5IDQuNjcgMS4xNC0xLjczLTMuMDYtNC45OC00Ljk1LTguNDktNC45Ni0uMjMgMC0uNDYuMDItLjY4LjAzLTEuOTUuMTMtMy44MS44NS01LjM0IDIuMDYuMy4yNS42My41OCAxLjMzIDEuMjggMS4zMiAxLjMgNC42OSAyLjY0IDQuNyAyLjhaIiBzdHlsZT0iZmlsbDp1cmwoI2YpIi8+PHBhdGggZD0iTTE3LjEyIDE2LjJjLjE2LjEuMjkuMTkuNC4yNy0uNDQtMS41NS0uNDYtMy4xOC0uMDUtNC43NC0xLjc5Ljg3LTMuMzggMi4wOS00LjY3IDMuNjEuMDkgMCAyLjkxLS4wNSA0LjMyLjg3WiIgc3R5bGU9ImZpbGw6dXJsKCNnKSIvPjxwYXRoIGQ9Ik00LjgxIDI1LjFjMS41IDguODQgOS41MSAxNS41OSAxOC42IDE1Ljg1IDguNDIuMjQgMTMuOC00LjY1IDE2LjAyLTkuNDIgMS44OC00LjEyIDIuMS04LjgxLjYtMTMuMDl2LS4wNC4wM2MuNjkgNC40OS0xLjU5IDguODQtNS4xNiAxMS43OXYuMDNjLTYuOTcgNS42Ny0xMy42MyAzLjQyLTE0Ljk3IDIuNS0uMDktLjA1LS4xOS0uMDktLjI4LS4xNC00LjA2LTEuOTQtNS43My01LjYzLTUuMzctOC44LTEuOTcuMDMtMy43Ny0xLjEtNC41OS0yLjg5IDIuMTctMS4zMyA0Ljg2LTEuNDMgNy4xMy0uMjkgMi4zIDEuMDQgNC45MSAxLjE0IDcuMjguMjkgMC0uMTYtMy4zOC0xLjUtNC43LTIuOC0uNy0uNjktMS4wNC0xLjAzLTEuMzMtMS4yOC0uMTYtLjE0LS4zMy0uMjYtLjUtLjM4LS4xMi0uMDgtLjI0LS4xNi0uNC0uMjctMS40MS0uOTItNC4yMy0uODctNC4zMi0uODctLjc3LS45Ny0uNzEtNC4xOS0uNjctNC44Ni0uMjMuMDktLjQ0LjIxLS42NS4zNC0uNjguNDgtMS4zMSAxLjAzLTEuOSAxLjYyLS42Ny42Ny0xLjI3IDEuNC0xLjgyIDIuMTctMS4yNSAxLjc3LTIuMTMgMy43Ni0yLjYgNS44NyAwIC4wNC0uNyAzLjA1LS4zNiA0LjYxWiIgc3R5bGU9ImZpbGw6dXJsKCNoKSIvPjxwYXRoIGQ9Ik0zMC44NiAxNy40NWMuNzEuNyAxLjMxIDEuNDkgMS44IDIuMzUuMTEuMDguMjEuMTYuMjkuMjQgNC40IDQuMDUgMi4wOSA5Ljc4IDEuOTIgMTAuMTkgMy41Ny0yLjk0IDUuODUtNy4yOSA1LjE3LTExLjc5LTIuMTktNS40Ny01LjkxLTcuNjctOC45NC0xMi40Ny0uMTUtLjI0LS4zMS0uNDktLjQ2LS43NC0uMDktLjE1LS4xNS0uMjgtLjIxLS40LS4xMy0uMjQtLjIyLS41LS4yOS0uNzcgMC0uMDMtLjAyLS4wNS0uMDQtLjA1aC0uMDVjLS43NS4zNi01LjIgNy40LjgzIDEzLjQyWiIgc3R5bGU9ImZpbGw6dXJsKCNpKSIvPjxwYXRoIGQ9Ik0zMi45NSAyMC4wNGMtLjA4LS4wOC0uMTgtLjE2LS4yOS0uMjRsLS4xMi0uMDljLTEuMzYtLjk0LTMuMDMtMS4zNS00LjY3LTEuMTQgNi45NyAzLjQ5IDUuMSAxNS40OS00LjU2IDE1LjA0LS44Ni0uMDQtMS43MS0uMi0yLjUyLS40OS0uMTktLjA3LS4zOC0uMTUtLjU3LS4yMy0uMTEtLjA1LS4yMi0uMS0uMzMtLjE2aC4wMWMxLjM1LjkzIDggMy4xOCAxNC45Ni0yLjQ5di0uMDNjLjE4LS40MSAyLjQ5LTYuMTMtMS45MS0xMC4xOVoiIHN0eWxlPSJmaWxsOnVybCgjaikiLz48cGF0aCBkPSJNMTUuMzEgMjYuMzlzLjg5LTMuMzQgNi40MS0zLjM0Yy42IDAgMi4zLTEuNjYgMi4zMy0yLjE1LTIuMzcuODYtNC45OC43Ni03LjI4LS4yOS0yLjI2LTEuMTUtNC45Ni0xLjA0LTcuMTMuMjkuODMgMS43OSAyLjYzIDIuOTIgNC41OSAyLjg5LS4zNiAzLjE3IDEuMzIgNi44NiA1LjM3IDguOC4wOS4wNC4xOC4wOS4yNy4xMy0yLjM3LTEuMjItNC4zMi0zLjU0LTQuNTctNi4zNFoiIHN0eWxlPSJmaWxsOnVybCgjaykiLz48cGF0aCBkPSJNNDEuOTYgMTcuNDNjLS44NC0yLjAzLTIuNTUtNC4yMi0zLjg5LTQuOTEuOTUgMS44NSAxLjYyIDMuODMgMS45NiA1Ljg4di4wM2MtMi4xOS01LjQ2LTUuOS03LjY3LTguOTQtMTIuNDctLjE1LS4yNC0uMzEtLjQ5LS40Ni0uNzQtLjA5LS4xNS0uMTUtLjI4LS4yMS0uNC0uMTMtLjI0LS4yMi0uNS0uMjktLjc3IDAtLjAzLS4wMi0uMDUtLjA0LS4wNWgtLjA1Yy00Ljg3IDIuODQtNi41MiA4LjEyLTYuNjcgMTAuNzYuMjMtLjAyLjQ1LS4wMy42OC0uMDMgMy41MiAwIDYuNzYgMS45IDguNDkgNC45Ni0xLjM2LS45NC0zLjAzLTEuMzUtNC42Ny0xLjE0IDYuOTcgMy40OSA1LjEgMTUuNDktNC41NiAxNS4wNC0uODYtLjA0LTEuNzEtLjItMi41Mi0uNDktLjE5LS4wNy0uMzgtLjE1LS41Ny0uMjMtLjExLS4wNS0uMjItLjEtLjMzLS4xNmguMDFjLS4wOS0uMDQtLjE5LS4wOC0uMjgtLjEzLjA5LjA0LjE4LjA5LjI3LjEzLTIuMzctMS4yMi00LjMyLTMuNTQtNC41Ny02LjM0IDAgMCAuODktMy4zNCA2LjQxLTMuMzQuNiAwIDIuMy0xLjY2IDIuMzMtMi4xNSAwLS4xNi0zLjM4LTEuNS00LjctMi44LS43LS42OS0xLjA0LTEuMDMtMS4zMy0xLjI4LS4xNi0uMTQtLjMzLS4yNi0uNS0uMzgtLjQ0LTEuNTUtLjQ2LTMuMTgtLjA1LTQuNzQtMS43OS44Ny0zLjM4IDIuMDktNC42NyAzLjYxLS43Ny0uOTctLjcxLTQuMTktLjY3LTQuODYtLjIzLjA5LS40NC4yMS0uNjUuMzQtLjY4LjQ4LTEuMzEgMS4wMy0xLjkgMS42Mi0uNjYuNjctMS4yNyAxLjQtMS44MSAyLjE3LTEuMjUgMS43Ny0yLjEzIDMuNzYtMi42IDUuODdsLS4wMy4xM2MtLjA0LjE3LS4yIDEuMDQtLjIyIDEuMjItLjE1Ljg5LS4yNSAxLjgtLjI5IDIuN3YuMWMuMDIgMTAuNzEgOC43MiAxOS4zNyAxOS40MiAxOS4zNiA5LjQyLS4wMiAxNy40Ni02LjggMTkuMDctMTYuMDhsLjA5LS43NWMuNC0zLjMtLjAzLTYuNjUtMS4yNi05Ljc0Wm0tMS45MiAxdi4wMi0uMDJaIiBzdHlsZT0iZmlsbDp1cmwoI2wpIi8+PHBhdGggZD0iTTAgMGg0OHY0OEgweiIgc3R5bGU9ImZpbGw6bm9uZSIvPjwvc3ZnPg==)
+            }
+            .node {
+                background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZD0iTTIzLjAxIDQuMjUgNi42NiAxMy4zYy0uNjEuMzQtLjk5Ljk2LS45OSAxLjY0djE4LjExYzAgLjY4LjM4IDEuMy45OSAxLjY0bDE2LjM2IDkuMDZjLjYxLjM0IDEuMzcuMzQgMS45OCAwbDE2LjM2LTkuMDZjLjYxLS4zNC45OC0uOTYuOTgtMS42NFYxNC45NGMwLS42OC0uMzgtMS4zLS45OS0xLjY0TDI0Ljk5IDQuMjVDMjQuNjggNC4wOCAyNC4zNCA0IDI0IDRzLS42OC4wOC0uOTkuMjUiIHN0eWxlPSJmaWxsOiMzODhlM2MiLz48cGF0aCBkPSJNMjMuMDEgNC4yNSA1LjY3IDMzLjA1YzAgLjY4LjM4IDEuMy45OSAxLjY0bDE2LjM2IDkuMDZjLjYxLjM0IDEuMzcuMzQgMS45OCAwbDE3LjM0LTI4LjhjMC0uNjgtLjM4LTEuMy0uOTktMS42NEwyNC45OSA0LjI1QzI0LjY4IDQuMDggMjQuMzQgNCAyNCA0cy0uNjguMDgtLjk5LjI1IiBzdHlsZT0iZmlsbDojMmU3ZDMyIi8+PHBhdGggZD0iTTIzLjAxIDQuMjUgNi42NiAxMy4zYy0uNjEuMzQtLjk5Ljk2LS45OSAxLjY0bDE3LjM1IDI4LjhjLjYxLjM0IDEuMzcuMzQgMS45OCAwbDE2LjM2LTkuMDZjLjYxLS4zNC45OS0uOTYuOTktMS42NEwyNC45OSA0LjI1QzI0LjY4IDQuMDggMjQuMzQgNCAyNCA0cy0uNjguMDgtLjk5LjI1IiBzdHlsZT0iZmlsbDojNGNhZjUwIi8+PHBhdGggZD0iTTAgMGg0OHY0OEgweiIgc3R5bGU9ImZpbGw6bm9uZSIvPjwvc3ZnPg==);
+            }
+            .deno {
+                background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZD0iTTIyLjQgNGgtLjZhMjAgMjAgMCAwIDAtLjIgMzkuOWg0LjhBMjAuMSAyMC4xIDAgMCAwIDQ0IDI2LjR2LTQuOEEyMC4xIDIwLjEgMCAwIDAgMjYuNSA0aC00LjFabS4zIDIuMXYzbC4xIDEuOS4zIDZ2LjNoLS4ybC0uMy0uMXYtLjhMMjIgN3YtMWwuMS0uMWguNVY2Wm00LjcgMHYzLjJhMTQyLjIgMTQyLjIgMCAwIDAgMCA0SDI3di0xLjVsLS4xLTJWNmguNVpNMTYgNy42bC42IDYuMy4xIDIuNHYuNGgtLjN2LS4ybC0uNi02LS4yLTIuNi4xLS4zaC4zWm0xMy41IDFjLjIgMCAuMiAwIC4yLjN2Mi44bC0uNS0uMlYxMGMwLTEuNiAwLTEuNS4zLTEuNFptLTkgLjJ2MS42bC4xIDIuMmMwIC45IDAgLjgtLjMuOGwtLjEtLjJ2LTFsLS4yLTEuOS0uMS0xLjQuMS0uM2guM3EuMiAwIC4yLjJabTEzLjYuN2guMlYxM2gtLjJsLS4yLS4xVjkuNnEwLS4xLjIgMFptLTkgLjYuMSAzLjZ2LjhIMjVsLS4zLS4xLS4xLTRWMTBoLjJsLjMuMVptMTEuNC40djdhNDguMiA0OC4yIDAgMCAxLS4yIDdsLS4xLTYuNVYxMWwtLjEtLjdoLjFsLjIuM1ptLTQuNSAxVjIwbC0uMS0uMWgtLjJ2LTguNEgzMlptLTEzLjUuMnYxLjljLjEgMSAuMSAxLS4xIDFzLS4yIDAtLjItLjJjMC0uMy0uMy0yLjctLjItMi44aC40di4xWm0tOC4yIDEuMy4zIDIuNC4xIDEuNS0uNC4zLS41LTQuNi40LS42LjEgMVptMTkuMy41aC4xdjIuNmMwIC40IDAgLjUtLjIuNGgtLjJ2LTNoLjNabS0xNy4xIDIgLjMgMy41LjIgMS44LS4yLjItLjIuMnYtLjRsLS4zLTIuMy0uMy0zLjJMMTIgMTRsLjItLjJjLjEtLjIuMi0uMi4yLS4xbC4yIDEuOFptLTMuNy41LjYgNS43LjYgNC43YTEwNi41IDEwNi41IDAgMCAwLS4yIDEuMmwtLjUtNC40TDkgMjFsLS4zLTIuNS0uMy0yLjMtLjItMS4zLjQtLjYuMiAxLjhabS0xLjUgMi4xLjMgMi40YzAgLjguMiAxLjcuMyAyVjIzLjRjLS4xIDAtLjIuMS0uMiAwdi0uM2wtLjUtMi45LS4zLTIuNHYtLjNsLjItLjMuMiAxWm0yNy0uNnY1LjJjLS40IDAtLjQgMC0uNC0yLjh2LTIuNWguNFptLTEwLjguOWMxLjEuMSAyLjEuNCAzIDEgLjcuMyAxIC41IDEuNyAxLjEgMSAxIDEuNiAxLjkgMi4yIDNhMjAgMjAgMCAwIDEgMS42IDcuNiAxNTcuNCAxNTcuNCAwIDAgMSAuNiA4LjFjMCAuOS4xLjgtLjYgMS4xLTEgLjYtMi4xIDEtMy41IDEuMi0xLjYuNC0yLjcuNi00LjMuNkgyM3YtLjZsLjEtMS42YTYzIDYzIDAgMCAwLS41LTEwLjhsLjYtLjNjLjktLjMgMS42LS43IDEuNy0uOS4zLS40LS4xLS45LS42LS45bC0uNi4yYTEzLjMgMTMuMyAwIDAgMS03LjggMS4xYy0uNSAwLTEuNC0uNC0yLjItLjgtLjktLjUtMS40LTEuMS0xLjYtMS45di0xLjZsLjktMS42YzEuNC0xLjggNC4zLTMuNCA3LjItNCAxLS4yIDIuMy0uMiAzLjMgMFptMTUuMi4xYTIxNS4yIDIxNS4yIDAgMCAxIC4yIDQuOGgtLjR2LTQuOWwuMi4xWm0yLjIgMi43aC4xdjQuMmMwIDUuMiAwIDUuMy0uMiA1LjgtLjMuNy0uMy44LS4zLTIuNGExNzMuMiAxNzMuMiAwIDAgMSAuNC03LjZabS0yOS42IDEuMmMwIC40IDAgLjUtLjIuOGwtLjEuM3YtLjVjLS4yLS44LS4yLS44IDAtMWguMnYuNFptLTMgM2EyOTQuMiAyOTQuMiAwIDAgMCAuNCA1TDggMjUuNGMuMi0uMS4yIDAgLjIuMlptMy41IDIuMy4xIDEuNmMwIC4xLS4xLjMtLjIuMmwtLjEtMS0uMi0xdi0uM2wuMi4yLjIuM1ptNCAxLjh2LjhjLjIgMSAuMi45IDAgLjlzLS4yIDAtLjMtLjl2LS44aC4yWm0zLjggMHYuN2E1Mi41IDUyLjUgMCAwIDAgMC0uNlptLTkuMiAxIC40IDMuOC4yIDEuNHYuMkgxMWwtLjEtLjMtLjQtMy42LS4yLTEuNGMwLS4xLjEtLjEuMiAwWm0yOC40IDJ2Mi4xbC0uMi4yYy0uMi40LS4yLjUtLjItMS44di0ybC4yLS4zLjItLjJ2MlpNMzQuMiAzNlYzOXMtLjEuMS0uMSAwVjMzbC4xIDNabS0xNi0yYTE1OC44IDE1OC44IDAgMCAxIC4xIDNoLS4xbC0uMy0yLjh2LS41Yy4yIDAgLjIgMCAuMy4zWm0tMy45IDEuN3YuM2E1NS4yIDU1LjIgMCAwIDAgLjMgMy42bC0uMi0uM3YtLjVsLS4yLTF2LTEuMmMtLjItLjktLjItMSAwLTFsLjEuMVptMi4zIDMuM3YxLjZjLS4yIDAtLjItLjMtLjMtLjhsLjEtMWMuMiAwIC4yIDAgLjIuMloiLz48cGF0aCBkPSJNMTQuOSAyMC44Yy0uNS4yLS42IDEtLjEgMS4yLjMuMi43IDAgLjktLjJhLjcuNyAwIDAgMC0uOC0xWk0xOC4yIDIxLjNjLS41LjMtLjUgMSAwIDEuMy41LjMgMS0uMSAxLS43cy0uNS0uOS0xLS42WiIvPjxwYXRoIGQ9Ik0wIDBoNDh2NDhIMHoiIHN0eWxlPSJmaWxsOm5vbmUiLz48L3N2Zz4=);
+            }
+            .cordova {
+                background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZD0iTTQwLjM2IDQzLjA5aC02LjQ4bC40NS01LjQ1aC0zLjE4bC0uNDUgNS40NUgxNy4yOWwtLjQ1LTUuNDVoLTMuMThsLjQ1IDUuNDVINy42M0wzLjk5IDE5LjQ1bDkuMS0xNC41NGgyMS44Mkw0NCAxOS40NiA0MC4zNiA0My4xWm0tNy4yNy0zMC45MWgtNS44NGwuMzkgMi43M2gtNy4yN2wuMzktMi43M2gtNS44NGwtMy42NCA3LjI3TDEzLjEgMzRoMjEuODJsMS44Mi0xNC41NS0zLjY0LTcuMjdabS0zLjE4IDE2Ljk5Yy0uNSAwLS45MS0xLjUxLS45MS0zLjM4cy40MS0zLjM4LjkxLTMuMzguOTEgMS41MS45MSAzLjM4LS40MSAzLjM4LS45MSAzLjM4Wm0tMTEuNDguMjhjLS41IDAtLjkxLTEuNTEtLjkxLTMuMzhzLjQxLTMuMzguOTEtMy4zOC45MSAxLjUxLjkxIDMuMzgtLjQxIDMuMzgtLjkxIDMuMzhaIiBzdHlsZT0iZmlsbDojNDQ0Ii8+PHBhdGggZD0iTTAgMGg0OHY0OEgweiIgc3R5bGU9ImZpbGw6bm9uZSIvPjwvc3ZnPg==);
+            }
+            .capacitor {
+                background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJMYXllcl8xIiB2aWV3Qm94PSIwIDAgNDggNDgiPjxkZWZzPjxzdHlsZT4uY2xzLTJ7ZmlsbDojMTE5ZWZmfS5jbHMtM3tmaWxsOiM1M2I5ZmZ9PC9zdHlsZT48L2RlZnM+PHBhdGggZD0iTTAgMGg0OHY0OEgweiIgc3R5bGU9ImZpbGw6bm9uZSIvPjxwYXRoIGQ9Im0xMC4yMyAxMi40Ni02LjE4IDYuMTkgOS41MyA5LjU2TDQgMzcuODJsNi4xNiA2LjE5IDkuNi05LjYxIDkuNTUgOS41NCA2LjE4LTYuMTktMjUuMjYtMjUuMjlaIiBjbGFzcz0iY2xzLTMiLz48cGF0aCBkPSJtMjUuOTYgMjguMi02LjIgNi4xOSA5LjU1IDkuNTQgNi4xOC02LjE5LTkuNTMtOS41NFoiIGNsYXNzPSJjbHMtMiIvPjxwYXRoIGQ9Im0yNS45NiAyOC4yLTYuMiA2LjE5IDIuMzkgMi4zNyAzLjgxLTguNTZaIi8+PHBhdGggZD0ibTM0LjQgMTkuNzggOS42LTkuNjFMMzcuODIgNGwtOS42IDkuNTktOS41NS05LjU0LTYuMTggNi4xOSAyNS4yNiAyNS4yOSA2LjE4LTYuMTktOS41My05LjU2WiIgY2xhc3M9ImNscy0zIi8+PHBhdGggZD0ibTIyLjAzIDE5Ljc4IDYuMi02LjE5LTkuNTUtOS41NC02LjE4IDYuMTkgOS41MyA5LjU0WiIgY2xhc3M9ImNscy0yIi8+PHBhdGggZD0ibTIyLjAyIDE5Ljc4IDYuMi02LjE5LTIuMzktMi4zNy0zLjgxIDguNTZaIi8+PC9zdmc+);
+            }
+
+
+            footer {
+                grid-column: 2;
+                padding-bottom: 3em;
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <header>
+            <h1>@point-of-sale/</h1>
+            <p>
+                A set of JavaScript libraries for building point-of-sale applications. From receipt printers to barcode scanners, we've got you covered.
+            </p>
+        </header>
+
+        <main>
+            <section>
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="48" height="48" viewBox="0 0 48 48">
+                        <path fill="#90caf9" d="M36 5L32 9 28 5 24 9 20 5 16 9 12 5 8 9 4 5 4 36.5 36 36.5z"></path><path fill="#1976d2" d="M10 14H22V16H10zM25 14H30V16H25zM10 18H16V20H10zM19 18H30V20H19zM10 22H14V24H10zM17 22H23V24H17zM26 22H30V24H26z"></path><path fill="#bbdefb" d="M38.522,30h-29L9.478,43c0,0,27.579-0.004,29,0c3.038,0.009,5.51-2.894,5.522-6.483 S41.559,30.009,38.522,30z"></path><path fill="#1976d2" d="M10 26H20V28H10zM22 26H30V28H22z"></path><path fill="#42a5f5" d="M9.522,30C6.484,29.991,4.012,32.894,4,36.483C3.988,40.073,6.441,42.991,9.478,43 s5.51-2.894,5.522-6.483S12.559,30.009,9.522,30z"></path><path fill="#1976d2" d="M9.509,33C8.33,33,7.008,34.492,7,36.493c-0.004,1.042,0.351,2.035,0.973,2.725 c0.264,0.291,0.81,0.78,1.514,0.782c0.002,0,0.003,0,0.004,0c1.178,0,2.501-1.492,2.509-3.493c0.007-2.003-1.307-3.504-2.487-3.507 C9.511,33,9.51,33,9.509,33z"></path>
+                    </svg>
+
+                    receipt-printer
+
+                    <a href="receipt-printer/playground.html" class="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                            <path fill="#2196f3" d="M44,24c0,11.047-8.953,20-20,20S4,35.047,4,24S12.953,4,24,4S44,12.953,44,24z"></path><path fill="#fff" d="M17,33V15l18,9L17,33z"></path>
+                        </svg>
+
+                        Playground
+                    </a>
+                </h2>
+                <p>
+                    Creating a receipt using easy steps:
+                </p>
+                <dl>
+                    <dt>
+                        @point-of-sale/<a href="https://github.com/NielsLeenheer/ReceiptPrinterEncoder">receipt-printer-encoder</a>
+                    </dt>
+
+                    <dd>
+                        <div class='support'>
+                            <div class='icon chrome' title="Chrome"></div>
+                            <div class='icon edge' title="Edge"></div>
+                            +
+                            |
+                            <div class='icon node' title="Node"></div> 
+                            +
+                        </div>
+                    </dd>
+                </dl>
+                <p>
+                    Determining the status of the printer and accessing peripherals:
+                </p>
+                <dl>
+                    <dt>
+                        @point-of-sale/<a href="https://github.com/NielsLeenheer/ReceiptPrinterStatus">receipt-printer-status</a>
+                    </dt>
+                    <dd>
+                        <div class='support'>
+                            <div class='icon chrome' title="Chrome"></div>
+                            <div class='icon edge' title="Edge"></div>
+                            |
+                            <div class='icon node' title="Node"></div>
+                        </div>
+                    </dd>
+                </dl>
+                <p>
+                    Connecting to the printer and sending commands:
+                </p>
+                <dl>
+                    <dt>
+                        @point-of-sale/<a href="https://github.com/NielsLeenheer/WebUSBReceiptPrinter">webusb-receipt-printer</a>
+                    </dt>
+                    <dd>
+                        <div class='support'>
+                            <div class='icon chrome' title="Chrome"></div>
+                            <div class='icon edge' title="Edge"></div>
+                        </div>
+                    </dd>
+                    <dt>
+                        @point-of-sale/<a href="https://github.com/NielsLeenheer/WebSerialReceiptPrinter">webserial-receipt-printer</a>
+                    </dt>
+                    <dd>
+                        <div class='support'>
+                            <div class='icon chrome' title="Chrome"></div>
+                            <div class='icon edge' title="Edge"></div>
+                        </div>
+                    </dd>
+                    <dt>
+                        @point-of-sale/<a href="https://github.com/NielsLeenheer/WebBluetoothReceiptPrinter">webbluetooth-receipt-printer</a>
+                    </dt>
+                    <dd>
+                        <div class='support'>
+                            <div class='icon chrome' title="Chrome"></div>
+                            <div class='icon edge' title="Edge"></div>
+                        </div>
+                    </dd>
+                    <dt>
+                        @point-of-sale/<a href="https://github.com/NielsLeenheer/NetworkReceiptPrinter">network-receipt-printer</a>
+                    </dt>
+                    <dd>
+                        <div class='support'>
+                            <div class='icon node' title="Node"></div>
+                        </div>
+                    </dd>
+                    <dt>
+                        @point-of-sale/<a href="https://github.com/NielsLeenheer/SystemReceiptPrinter">system-receipt-printer</a>
+                    </dt>
+                    <dd>
+                        <div class='support'>
+                            <div class='icon node' title="Node"></div>
+                        </div>
+                    </dd>
+                </dl>
+            </section>
+
+            <section>
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="48" height="48" viewBox="0 0 48 48">
+                        <path fill="#FFCDD2" d="M38,43H10c-2.2,0-4-1.8-4-4V21c0-2.2,1.8-4,4-4h28c2.2,0,4,1.8,4,4v18C42,41.2,40.2,43,38,43z"></path><path fill="#FF1744" d="M38,17H10c-2.2,0-4,1.8-4,4v18c0,2.2,1.8,4,4,4h28c2.2,0,4-1.8,4-4V21C42,18.8,40.2,17,38,17z M37,39H11c-0.6,0-1-0.4-1-1V22c0-0.6,0.4-1,1-1h26c0.6,0,1,0.4,1,1v16C38,38.6,37.6,39,37,39z"></path><path fill="#607D8B" d="M16 7H20V17H16zM22 7H24V17H22zM12 7H14V17H12zM26 7H32V17H26zM34 7v10c2.2 0 2 0 2 0V7H34z"></path><g><path fill="#263238" d="M16 21H20V29H16zM22 21H24V29H22zM12 21H14V29H12zM26 21H32V29H26zM34 21v8c2.2 0 2 0 2 0v-8H34z"></path></g>
+                    </svg>
+
+                    barcode-scanner
+                </h2>
+                <p>
+                    Scanning barcodes by using an external scanner, or the camera of a laptop or mobile device:
+                </p>
+                <dl>
+                    <dt>@point-of-sale/<a href="https://github.com/NielsLeenheer/WebHidBarcodeScanner">webhid-barcode-scanner</a></dt>
+                    <dd>
+                        <div class='support'>
+                            <div class='icon chrome' title="Chrome"></div>
+                            <div class='icon edge' title="Edge"></div>
+                        </div>
+                    </dd>
+                    <dt>@point-of-sale/<a href="https://github.com/NielsLeenheer/WebSerialBarcodeScanner">webserial-barcode-scanner</a></dt> 
+                    <dd>
+                        <div class='support'>
+                            <div class='icon chrome' title="Chrome"></div>
+                            <div class='icon edge' title="Edge"></div>
+                        </div>
+                    </dd>
+                    <dt>@point-of-sale/<a href="https://github.com/NielsLeenheer/WebcamBarcodeScanner">webcam-barcode-scanner</a></dt>
+                    <dd>
+                        <div class='support'>
+                            <div class='icon chrome' title="Chrome"></div>
+                            <div class='icon edge' title="Edge"></div>
+                            <div class='icon firefox' title="Firefox"></div>
+                            <div class='icon safari' title="Safari"></div>
+                        </div>
+                    </dd>
+                </dl>
+            </section>
+
+            <section>
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="48" height="48" viewBox="0 0 48 48">
+                        <path fill="#80DEEA" d="M40,41H8c-2.2,0-4-1.8-4-4V11c0-2.2,1.8-4,4-4h32c2.2,0,4,1.8,4,4v26C44,39.2,42.2,41,40,41z"></path><path fill="#2962FF" d="M36 17L31 17 29 15 31 13 36 13 38 15zM36 35L31 35 29 33 31 31 36 31 38 33zM37 30L37 18 39 16 41 18 41 30 39 32zM26 30L26 18 28 16 30 18 30 30 28 32zM17 17L12 17 10 15 12 13 17 13 19 15zM17 35L12 35 10 33 12 31 17 31 19 33zM18 30L18 18 20 16 22 18 22 30 20 32zM7 30L7 18 9 16 11 18 11 30 9 32z"></path>
+                    </svg>
+
+                    customer-display
+                </h2>
+                <p>
+                    Show text on a customer facing display:
+                </p>
+                <dl>
+                    <dt>@point-of-sale/<a href="https://github.com/NielsLeenheer/WebSerialCustomerDisplay">webserial-customer-display</a></dt>
+                    <dd>
+                        <div class='support'>
+                            <div class='icon chrome' title="Chrome"></div>
+                            <div class='icon edge' title="Edge"></div>
+                        </div>
+                    </dd>
+                </dl>
+            </section>
+        </main>
+
+        <footer>
+            <p>
+                These libraries have been created by <a href="https://twitter.com/html5test"></a>Niels Leenheer</a> under the MIT license. Feel free to use it in your products. The development of these libraries is sponsored by <a href="https://salonhub.nl">Salonhub</a>.
+            </p>
+
+            <img src="https://salonhub.nl/assets/images/salonhub.svg" alt="Salonhub" width="140">
+        </footer>
+    </body>
