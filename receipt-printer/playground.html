@@ -6,7 +6,6 @@
 
         <title>@point-of-sale/receipt-printer-encoder playground</title>
 
-        <!-- <script src="../dist/receipt-printer-encoder.umd.js"></script> -->
         <script src="https://cdn.jsdelivr.net/gh/NielsLeenheer/ReceiptPrinterEncoder@main/dist/receipt-printer-encoder.umd.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@point-of-sale/webbluetooth-receipt-printer/dist/webbluetooth-receipt-printer.umd.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@point-of-sale/webusb-receipt-printer/dist/webusb-receipt-printer.umd.js"></script>
@@ -486,7 +485,7 @@
                                             result += `<span class="description">
                                                 ${typeof command.command !== 'undefined' ? command.command : ''}
                                                 ${typeof command.property !== 'undefined' ? command.property + ': ' : ''}
-                                                ${typeof command.value === 'string' ? command.value : ''}
+                                                ${typeof command.value !== 'undefined' && typeof command.value !== 'object' ? command.value : ''}
                                                 ${typeof command.value === 'object' ? Object.entries(command.value).map(i => i[0] + ': ' + i[1]).join(', ') : ''}
                                             </span>`;
                                         }
