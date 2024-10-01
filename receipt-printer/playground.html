@@ -31,8 +31,9 @@
 
                 if (driverValue) {
                     driver.value = driverValue;
-                    changeDriver();
                 }
+
+                changeDriver();
 
                 /* Set up printer model */
 
@@ -115,8 +116,13 @@
 
 
             function changeDriver() {
-                let method = driver.value;
-                document.getElementById('baudrate').hidden = method !== 'serial';
+                document.getElementById('connect').disabled = !(
+                    (driver.value === 'bluetooth' && navigator.bluetooth) ||
+                    (driver.value === 'usb' && navigator.usb) ||
+                    (driver.value === 'serial' && navigator.serial)
+                );
+
+                document.getElementById('baudrate').hidden = driver.value !== 'serial';
             }
 
             function connect() {
@@ -205,9 +211,13 @@
                 let model = document.querySelector('#printerModel option:checked').textContent;
                 let errors = document.querySelector('#errors');
 
-                encoder = new ReceiptPrinterEncoder({
-                    printerModel: printerModel.value
-                });
+                let encoderOptions = {};
+                
+                if (printerModel.value) {
+                    encoderOptions.printerModel = printerModel.value;
+                }
+
+                encoder = new ReceiptPrinterEncoder(encoderOptions);
 
                 let script_ended = false;
                 let script_error = null;
@@ -463,12 +473,18 @@
             select {
                 border: none;
                 border-radius: 6px;
-                padding: 6px;
+                padding: 6px 28px 6px 6px;
 
                 margin: 14px 15px 14px 0;
                 font-family: system-ui;
                 font-weight: bold;
                 font-size: 10pt;
+
+                appearance: none;
+                background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCI+CjxwYXRoIGZpbGw9IiMyMTk2RjMiIGQ9Ik00MyAxNy4xTDM5LjkgMTQgMjQgMjkuOSA4LjEgMTQgNSAxNy4xIDI0IDM2eiI+PC9wYXRoPgo8L3N2Zz4=);
+                background-repeat: no-repeat;
+                background-position: right 6px center;
+                background-size: 16px;
             }
 
             button {
@@ -607,7 +623,8 @@
             }
 
             #toolbar .tabs svg {
-                height: 70%;
+                width: 1.5em;
+                height: 1.5em;
                 margin-right: 4px;
             }
             #toolbar .tabs input {
@@ -925,7 +942,10 @@
                 <option value="115200">115200</option>
             </select>
 
-            <select id="printerModel" onchange="updatePreview()"></select>
+            <select id="printerModel" onchange="updatePreview()">
+                <option value="">Generic</option>
+                <hr>
+            </select>
 
             <button id="connect" onclick="connect()">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
