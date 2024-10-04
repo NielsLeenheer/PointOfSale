@@ -9,6 +9,7 @@
         <script src="https://cdn.jsdelivr.net/gh/NielsLeenheer/WebcamBarcodeScanner@main/dist/webcam-barcode-scanner.umd.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/NielsLeenheer/WebHidBarcodeScanner@master/dist/webhid-barcode-scanner.umd.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/NielsLeenheer/WebSerialBarcodeScanner@main/dist/webserial-barcode-scanner.umd.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/NielsLeenheer/KeyboardBarcodeScanner@main/dist/keyboard-barcode-scanner.umd.js"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/bcbp/dist/index.umd.js"></script>
 
@@ -26,7 +27,7 @@
 
                 driver = document.getElementById('driver');
 
-                let driverValue = localStorage.getItem('driver');
+                let driverValue = localStorage.getItem('barcode-driver');
 
                 if (driverValue) {
                     driver.value = driverValue;
@@ -37,7 +38,7 @@
         
             window.addEventListener('beforeunload', () => {
                 if (driver) {
-                    localStorage.setItem('driver', driver.value);
+                    localStorage.setItem('barcode-driver', driver.value);
                 }
             });
 
@@ -46,6 +47,7 @@
 
             function changeDriver() {
                 document.getElementById('connect').disabled = !(
+                    (driver.value === 'keyboard') ||
                     (driver.value === 'webcam') ||
                     (driver.value === 'hid' && navigator.hid) ||
                     (driver.value === 'serial' && navigator.serial)
@@ -66,12 +68,18 @@
 
                     barcodeScanner = new WebSerialBarcodeScanner({
                         baudRate: baudRate,
-                        debug: true
+                        guessSymbology: true
                     });
                 }
 
                 if (method === 'webcam') {
-                    barcodeScanner = new WebcamBarcodeScanner({ debug: true });
+                    barcodeScanner = new WebcamBarcodeScanner({ 
+                        workerPath: '/dist/webcam-barcode-scanner.worker.js'
+                    });
+                }
+
+                if (method === 'keyboard') {
+                    barcodeScanner = new KeyboardBarcodeScanner({ guessSymbology: true });
                 }
 
                 barcodeScanner.addEventListener('connected', device => connected(device));
@@ -237,7 +245,7 @@
                 output.innerHTML = `
                     <div class="barcode">
                         <div class="result">
-                            ${data.symbology ? `<p class='symbology'>${data.symbology}</p>` : ''}
+                            <p class='symbology' data-type='${data.symbology ? data.symbology : 'unknown'}'>${data.symbology ? data.symbology : 'unknown'}</p>
                             <p class='value'>${data.value.replace(/ /g, '<span class="space">&nbsp;</span>')}</p>
                             ${boardingpass ? `<div class='boardingpass'>${boardingpass}</div>` : ''}
                         </div>
@@ -363,7 +371,7 @@
                 opacity: 0.8;
 
                 display: grid;
-                grid-template-columns: 1fr min-content 580px 1fr;
+                grid-template-columns: 1fr 160px 580px 1fr;
             }
             #output .barcode:nth-child(1) {
                 opacity: 1;
@@ -383,6 +391,9 @@
                 border-radius: 5px;
                 margin: 0 0 8px 0;
                 padding: 6px 8px;            
+            }
+            #output .barcode .result .symbology[data-type="unknown"] {
+                background-color: #888;
             }
 
             #output .barcode .result .value {
@@ -489,9 +500,10 @@
     <body>
         <header>
             <select id="driver" onchange="changeDriver()">
-                <option value="hid" selected>HID</option>
+                <option value="webcam" selected>Webcam</option>
+                <option value="hid">HID</option>
                 <option value="serial">Serial</option>
-                <option value="webcam">Webcam</option>
+                <option value="keyboard">Keyboard</option>
             </select>
 
             <select id="baudrate" hidden>
