@@ -286,6 +286,7 @@
                 font-size: 10pt;
 
                 appearance: none;
+                background: #fff;
                 background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCI+CjxwYXRoIGZpbGw9IiMyMTk2RjMiIGQ9Ik00MyAxNy4xTDM5LjkgMTQgMjQgMjkuOSA4LjEgMTQgNSAxNy4xIDI0IDM2eiI+PC9wYXRoPgo8L3N2Zz4=);
                 background-repeat: no-repeat;
                 background-position: right 6px center;
@@ -442,10 +443,13 @@
             @container barcodes (width < 580px) {
                 #output .barcode .preview {
                     min-width: auto;
-                    min-height: 160px;
                     justify-self: center;
+                    margin-bottom: 20px;
                 }
 
+                #output .barcode .result .value {
+                    align-self: center;
+                }
                 #output .barcode .result .symbology {
                     align-self: center;
                 }
